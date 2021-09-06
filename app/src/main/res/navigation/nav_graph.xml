@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/humansFragment">
+
+
+<!--    android:label="FragmentHuman"-->
+
+    <fragment
+        android:id="@+id/humansFragment"
+        android:name="alex.com.taskrsschool.ui.human.HumansFragment"
+    tools:layout="@layout/fragment_humans">
+        <action
+            android:id="@+id/action_humansFragment_to_editorFragment"
+            app:destination="@id/editorFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editorFragment"
+        android:name="alex.com.taskrsschool.ui.editor.EditorFragment"
+        android:label="{title}"
+        tools:layout="@layout/fragment_editor" >
+        <argument
+            android:name="title"
+            app:argType="string" />
+        <argument
+            android:name="human"
+            app:argType="alex.com.taskrsschool.data.room.Human"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="alex.com.taskrsschool.ui.settings.SettingsFragment"
+        android:label="SettingsFragment" />
+    <action android:id="@+id/action_global_settingsFragment" app:destination="@id/settingsFragment" />
+</navigation>

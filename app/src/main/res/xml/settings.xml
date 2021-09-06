@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:icon="@drawable/ic_sort"
+        app:title="@string/settingsSorting">
+        <Preference
+            android:title="@string/settingsSortByName"
+            app:icon="@drawable/ic_sort_by_name"
+            app:key="sortByName"
+            app:persistent="true" />
+
+        <Preference
+            android:title="@string/settingsSortByAge"
+            app:icon="@drawable/ic_sort_by_age"
+            app:key="sortByAge"
+            app:persistent="true" />
+
+        <Preference
+            android:title="@string/settingsSortByProfession"
+            app:icon="@drawable/ic_sort_by_profession"
+            app:key="sortByProfession"
+            app:persistent="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:icon="@drawable/ic_database"
+        app:title="DB type">
+
+        <ListPreference
+            android:defaultValue="Room"
+            android:entries="@array/db_entries"
+            android:entryValues="@array/db_values"
+            android:key="db_type"
+            app:title="@string/settingsChooseDBtype" />
+    </PreferenceCategory>
+
+
+
+
+</PreferenceScreen>
