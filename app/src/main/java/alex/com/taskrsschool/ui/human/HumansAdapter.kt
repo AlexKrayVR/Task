@@ -2,7 +2,7 @@ package alex.com.taskrsschool.ui.human
 
 import alex.com.taskrsschool.R
 import alex.com.taskrsschool.common.DEFAULT_HUMAN_CARD_COLOR
-import alex.com.taskrsschool.data.room.Human
+import alex.com.taskrsschool.domain.model.Human
 import alex.com.taskrsschool.databinding.ItemHumanBinding
 import android.view.LayoutInflater
 import android.view.ViewGroup

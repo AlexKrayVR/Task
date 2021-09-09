@@ -1,34 +1,39 @@
 <resources>
     <string name="app_name">TaskRSSchool</string>
 
+    <!--title of HumansFragment depending on typeDB -->
+    <string name="titleHumanFragment">Humans list: %s</string>
+
+
+    <!--menu item -->
     <string name="filter">Filter</string>
 
-    <!--title of fragment depending on task -->
+    <!--title of EditorFragment depending on task -->
     <string name="newHuman">New Human</string>
     <string name="editHuman">Edit Human</string>
 
-    <!--snackbar message in fragment depending on action -->
+    <!--snackbar message in HumansFragment depending on action -->
     <string name="humanAdded">Human added</string>
     <string name="humanUpdated">Human updated</string>
 
-    <!--hints in fragment layout -->
+    <!--hints in EditorFragment layout -->
     <string name="hintHumanName">Name</string>
     <string name="hintHumanAge">Age</string>
     <string name="hintHumanProfession">Profession</string>
 
-    <!-- content description-->
+    <!--content description-->
     <string name="humanName">Name</string>
     <string name="humanAge">Age</string>
     <string name="HumanProfession">Profession</string>
     <string name="saveHuman">Save Human</string>
     <string name="humanCardColor">Human card color</string>
 
-    <!--validation of input -->
+    <!--validation of input in EditorViewModel-->
     <string name="nameValidation">Name cannot be empty</string>
     <string name="ageValidation">Age cannot be empty</string>
     <string name="professionValidation">Profession cannot be empty</string>
 
-    <!--settings titles -->
+    <!--titles of items in SettingsFragment  -->
     <string name="settingsSortByName">Sort By Name</string>
     <string name="settingsSortByAge">Sort By Age</string>
     <string name="settingsSortByProfession">Sort By Profession</string>

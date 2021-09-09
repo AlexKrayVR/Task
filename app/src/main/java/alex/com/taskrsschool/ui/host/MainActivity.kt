@@ -1,4 +1,4 @@
-package alex.com.taskrsschool.ui
+package alex.com.taskrsschool.ui.host
 
 import alex.com.taskrsschool.R
 import alex.com.taskrsschool.data.preferences.TYPE_DB_KEY
@@ -16,9 +16,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
-    lateinit var pref: SharedPreferences
+    private lateinit var pref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,10 +29,11 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
         navController = navHostFragment.findNavController()
 
-        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+        navController.addOnDestinationChangedListener { _, destination, _ ->
             if (destination.id == R.id.humansFragment) {
-                val title = pref.getString(TYPE_DB_KEY, "Room")
-                supportActionBar?.title = title
+                val title =
+                    pref.getString(TYPE_DB_KEY, resources.getStringArray(R.array.db_values)[0])
+                supportActionBar?.title = getString(R.string.titleHumanFragment, title)
             }
         }
 

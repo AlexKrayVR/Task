@@ -3,14 +3,12 @@ package alex.com.taskrsschool.data.room
 import alex.com.taskrsschool.common.SortOrder
 import alex.com.taskrsschool.data.DatabaseContract
 import alex.com.taskrsschool.data.TABLE_NAME
+import alex.com.taskrsschool.domain.model.Human
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface HumanDao :DatabaseContract {
-
-    @Query("DELETE FROM $TABLE_NAME")
-    override suspend fun deleteAllHumans()
 
     @Query("SELECT *FROM $TABLE_NAME")
     override fun getHumansWithoutSort(): Flow<List<Human>>

@@ -36,11 +36,28 @@ class PreferencesManager @Inject constructor(@ApplicationContext context: Contex
             preferences[PreferencesKeys.TYPE_DB] = typeDB.name
         }
     }
+
+
+    suspend fun updateTrigger(str: String) {
+        dataStore.edit { preferences ->
+            if (preferences[PreferencesKeys.UPDATE_DB] == str) {
+                preferences[PreferencesKeys.UPDATE_DB] = "trigger"
+            } else {
+                preferences[PreferencesKeys.UPDATE_DB] = str
+            }
+        }
+    }
+
+    val trigger: Flow<String> = dataStore.data.map {
+        it[PreferencesKeys.UPDATE_DB] ?: ""
+    }
 }
 
 object PreferencesKeys {
     val SORT_ORDER = preferencesKey<String>(SORT_ORDER_KEY)
     val TYPE_DB = preferencesKey<String>(TYPE_DB_KEY)
+
+    val UPDATE_DB = preferencesKey<String>(TRIGGER_KEY)
 }
 
 const val HUMAN_PREFERENCES = "human_preferences"
@@ -48,5 +65,4 @@ const val TYPE_DB_KEY = "db_type"
 const val SORT_ORDER_KEY = "sort_order"
 
 
-
-
+const val TRIGGER_KEY = "trigger"

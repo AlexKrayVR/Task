@@ -4,31 +4,28 @@ import alex.com.taskrsschool.common.SortOrder
 import alex.com.taskrsschool.common.TypeDB
 import alex.com.taskrsschool.common.logDebug
 import alex.com.taskrsschool.data.preferences.PreferencesManager
-
-import alex.com.taskrsschool.data.room.Human
+import alex.com.taskrsschool.domain.model.Human
 import alex.com.taskrsschool.data.room.HumanDao
 import alex.com.taskrsschool.data.sql_lite.SQLiteDao
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DatabaseRepository @Inject constructor(
-    private var humansRoom: HumanDao,
     private val humansSQLite: SQLiteDao,
-    private val preferencesManager: PreferencesManager,
+    private var humansRoom: HumanDao,
+    private val preferencesManager: PreferencesManager
 ) {
 
-    private var humansBD: DatabaseContract = humansRoom
+    private var humansBD: DatabaseContract = humansSQLite
 
-    val job = CoroutineScope(Dispatchers.Default).launch {
+    val job = CoroutineScope(Dispatchers.IO).launch {
         preferencesManager.typeDB.collect {
-            logDebug("collect typeDB: $it")
+            logDebug("typeDB in DatabaseRepository: $it")
             when (it) {
                 TypeDB.ROOM.name -> humansBD = humansRoom
                 TypeDB.SQL_LITE.name -> humansBD = humansSQLite
@@ -36,9 +33,20 @@ class DatabaseRepository @Inject constructor(
         }
     }
 
-     val humansSortedFlow = preferencesManager.sortOrder.flatMapLatest {
-        getHumans(SortOrder.valueOf(it))
-    }
+    private val _humansFlow =
+        combine(
+            preferencesManager.sortOrder,
+            preferencesManager.trigger,
+        ) { sortOrder, trigger ->
+            Pair(sortOrder, trigger)
+        }
+            .flatMapLatest { (sortOrder, trigger) ->
+                logDebug("sortOrder: $sortOrder\t ")
+                logDebug("trigger: $trigger\t ")
+                getHumans(SortOrder.valueOf(sortOrder))
+            }
+
+    var humansFlow = _humansFlow
 
     private fun getHumans(order: SortOrder): Flow<List<Human>> {
         return humansBD.getHumans(order)
@@ -46,10 +54,6 @@ class DatabaseRepository @Inject constructor(
 
     suspend fun insert(human: Human) {
         humansBD.insert(human)
-    }
-
-    suspend fun deleteAllHumans() {
-        humansBD.deleteAllHumans()
     }
 
     suspend fun delete(human: Human) {

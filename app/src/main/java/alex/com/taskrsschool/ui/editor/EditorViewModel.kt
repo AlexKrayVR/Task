@@ -2,7 +2,7 @@ package alex.com.taskrsschool.ui.editor
 
 import alex.com.taskrsschool.R
 import alex.com.taskrsschool.common.*
-import alex.com.taskrsschool.data.room.Human
+import alex.com.taskrsschool.domain.model.Human
 import alex.com.taskrsschool.data.DatabaseRepository
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel

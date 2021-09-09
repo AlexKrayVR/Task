@@ -3,7 +3,7 @@ package alex.com.taskrsschool.ui.human
 import alex.com.taskrsschool.R
 import alex.com.taskrsschool.common.EDITOR_RESULT_KEY
 import alex.com.taskrsschool.common.logDebug
-import alex.com.taskrsschool.data.room.Human
+import alex.com.taskrsschool.domain.model.Human
 import alex.com.taskrsschool.databinding.FragmentHumansBinding
 import android.os.Bundle
 import android.view.Menu
@@ -39,12 +39,10 @@ class HumansFragment : Fragment(R.layout.fragment_humans), HumansAdapter.OnItemC
         initEvents()
         initFragmentListener()
         setHasOptionsMenu(true)
-
         viewModel.humans.observe(viewLifecycleOwner) {
             humansAdapter.submitList(it)
-            logDebug("HumansFragment: " + it.toString())
+            logDebug("Humans: $it")
         }
-
     }
 
     private fun initFragmentListener() {

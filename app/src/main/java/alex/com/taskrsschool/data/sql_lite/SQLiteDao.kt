@@ -3,8 +3,8 @@ package alex.com.taskrsschool.data.sql_lite
 import alex.com.taskrsschool.common.SortOrder
 import alex.com.taskrsschool.common.logDebug
 import alex.com.taskrsschool.data.*
-import alex.com.taskrsschool.data.room.Human
-import alex.com.taskrsschool.data.room.HumanDao
+import alex.com.taskrsschool.data.preferences.PreferencesManager
+import alex.com.taskrsschool.domain.model.Human
 import android.content.ContentValues
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -12,23 +12,25 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class SQLiteDao @Inject constructor(private val sqlLite: SQLiteHelper) : DatabaseContract {
+class SQLiteDao @Inject constructor(
+    private val sqlLite: SQLiteHelper,
+    private val preferencesManager: PreferencesManager
+) : DatabaseContract {
 
-    override suspend fun deleteAllHumans() {
-        sqlLite.writableDatabase.execSQL("DELETE FROM $TABLE_NAME")
-    }
-
-    override fun getHumans(order: SortOrder): Flow<List<Human>> = when (order) {
-        SortOrder.BY_DEFAULT -> getHumansWithoutSort()
-        SortOrder.BY_NAME -> getHumansSortedByName()
-        SortOrder.BY_AGE -> getHumansSortedByAge()
-        SortOrder.BY_PROFESSION -> getHumansSortedByProfession()
+    override fun getHumans(order: SortOrder): Flow<List<Human>> {
+        logDebug("getHumans in SQLiteDao Sorted: ${order.name}")
+        return when (order) {
+            SortOrder.BY_DEFAULT -> getHumansWithoutSort()
+            SortOrder.BY_NAME -> getHumansSortedByName()
+            SortOrder.BY_AGE -> getHumansSortedByAge()
+            SortOrder.BY_PROFESSION -> getHumansSortedByProfession()
+        }
     }
 
     private fun getHumansSorted(order: String?): Flow<List<Human>> {
-        logDebug("SQLiteDaoImpl: sort order-$order")
         val list = mutableListOf<Human>()
-        val cursor = sqlLite.readableDatabase.query(
+        val db = sqlLite.readableDatabase
+        val cursor = db.query(
             TABLE_NAME,
             arrayOf(
                 COLUMN_ID,
@@ -41,7 +43,7 @@ class SQLiteDao @Inject constructor(private val sqlLite: SQLiteHelper) : Databas
             null,
             null,
             null,
-            order?: "$order ASC"
+            order ?: "$order ASC"
         )
         with(cursor) {
             while (moveToNext()) {
@@ -57,6 +59,7 @@ class SQLiteDao @Inject constructor(private val sqlLite: SQLiteHelper) : Databas
             }
         }
         cursor.close()
+        db.close()
         return flowOf(list)
     }
 
@@ -70,26 +73,35 @@ class SQLiteDao @Inject constructor(private val sqlLite: SQLiteHelper) : Databas
         getHumansSorted(COLUMN_PROFESSION)
 
     override suspend fun insert(human: Human) {
+        val db = sqlLite.writableDatabase
         val values = ContentValues().apply {
             put(COLUMN_NAME, human.name)
             put(COLUMN_AGE, human.age)
             put(COLUMN_PROFESSION, human.profession)
             put(COLUMN_COLOR, human.color)
         }
-        sqlLite.writableDatabase.insert(TABLE_NAME, null, values)
+        db.insert(TABLE_NAME, null, values)
+        db.close()
+        preferencesManager.updateTrigger("insert")
     }
 
     override suspend fun delete(human: Human) {
-        sqlLite.writableDatabase.delete(TABLE_NAME, "id = ?", arrayOf(human.id.toString()))
+        val db = sqlLite.writableDatabase
+        db.delete(TABLE_NAME, "id = ?", arrayOf(human.id.toString()))
+        db.close()
+        preferencesManager.updateTrigger("delete")
     }
 
     override suspend fun update(human: Human) {
+        val db = sqlLite.writableDatabase
         val values = ContentValues().apply {
             put(COLUMN_NAME, human.name)
             put(COLUMN_AGE, human.age)
             put(COLUMN_PROFESSION, human.profession)
             put(COLUMN_COLOR, human.color)
         }
-        sqlLite.writableDatabase.update(TABLE_NAME,values, "id = ?",arrayOf(human.id.toString()))
+        db.update(TABLE_NAME, values, "id = ?", arrayOf(human.id.toString()))
+        db.close()
+        preferencesManager.updateTrigger("update")
     }
 }

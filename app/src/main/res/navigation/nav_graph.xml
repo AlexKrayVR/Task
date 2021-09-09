@@ -6,33 +6,41 @@
     app:startDestination="@id/humansFragment">
 
 
-<!--    android:label="FragmentHuman"-->
 
     <fragment
         android:id="@+id/humansFragment"
         android:name="alex.com.taskrsschool.ui.human.HumansFragment"
-    tools:layout="@layout/fragment_humans">
+        tools:layout="@layout/fragment_humans">
         <action
             android:id="@+id/action_humansFragment_to_editorFragment"
-            app:destination="@id/editorFragment" />
+            app:destination="@id/editorFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/editorFragment"
         android:name="alex.com.taskrsschool.ui.editor.EditorFragment"
         android:label="{title}"
-        tools:layout="@layout/fragment_editor" >
+        tools:layout="@layout/fragment_editor">
         <argument
             android:name="title"
             app:argType="string" />
         <argument
             android:name="human"
-            app:argType="alex.com.taskrsschool.data.room.Human"
-            app:nullable="true"
-            android:defaultValue="@null" />
+            app:argType="alex.com.taskrsschool.domain.model.Human"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="alex.com.taskrsschool.ui.settings.SettingsFragment"
         android:label="SettingsFragment" />
-    <action android:id="@+id/action_global_settingsFragment" app:destination="@id/settingsFragment" />
+    <action
+        android:id="@+id/action_global_settingsFragment"
+        app:destination="@id/settingsFragment"
+        app:enterAnim="@anim/slide_in_right"
+        app:exitAnim="@anim/slide_out_left"
+        app:popEnterAnim="@anim/slide_in_left"
+        app:popExitAnim="@anim/slide_out_right" />
 </navigation>

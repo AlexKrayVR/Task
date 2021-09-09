@@ -4,7 +4,7 @@ import alex.com.taskrsschool.R
 import alex.com.taskrsschool.common.ADD_HUMAN_RESULT_OK
 import alex.com.taskrsschool.common.EDIT_HUMAN_RESULT_OK
 import alex.com.taskrsschool.data.DatabaseRepository
-import alex.com.taskrsschool.data.room.Human
+import alex.com.taskrsschool.domain.model.Human
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -20,7 +20,7 @@ class HumansViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    val humans = repository.humansSortedFlow.asLiveData()
+    var humans = repository.humansFlow.asLiveData()
 
     fun onHumanSelected(human: Human) = viewModelScope.launch {
         humansEventChannel.send(HumansEvent.NavigateToEditHumanScreen(human))
@@ -60,8 +60,7 @@ class HumansViewModel @Inject constructor(
     }
 
     override fun onCleared() {
+        repository.job.cancel()
         super.onCleared()
     }
 }
-
-

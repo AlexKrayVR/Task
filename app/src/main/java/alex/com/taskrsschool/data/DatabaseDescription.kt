@@ -18,6 +18,3 @@ const val CREATE_TABLE =
             "$COLUMN_COLOR INTEGER NOT NULL)"
 
 const val DELETE_TABLE = "DROP TABLE IF EXIST $TABLE_NAME"
-
-
-
